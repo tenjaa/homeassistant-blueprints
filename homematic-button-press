@@ -1,6 +1,6 @@
 blueprint:
   name: Homematic Button Press
-  description: Run automation on button press event
+  description: Do stuff on button press
   domain: automation
   input:
     button:
@@ -22,6 +22,16 @@ blueprint:
       selector:
         entity:
           domain: automation
+    trigger_delay:
+      name: Delay between next trigger
+      description: Long presses might trigger multiple times. Delay a bit to avoid this.
+      default: 5
+      selector:
+        number:
+          min: 0
+          max: 86400
+          mode: box
+          unit_of_measurement: seconds
 
 trigger:
 - platform: event
@@ -32,6 +42,8 @@ trigger:
     channel: !input 'channel'
 
 action:
-  - service: automation.trigger
-    data: {}
-    entity_id: !input 'automation'
+- service: automation.trigger
+  data: {}
+  entity_id: !input 'automation'
+- delay:
+    seconds: !input 'trigger_delay'

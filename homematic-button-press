@@ -1,0 +1,37 @@
+blueprint:
+  name: Homematic Button Press
+  description: Run automation on button press event
+  domain: automation
+  input:
+    button:
+      name: Button
+      default:
+    press_type:
+      name: PRESS_LONG or PRESS_SHORT
+      default:
+    channel:
+      name: Channel
+      default:
+      selector:
+        number:
+          min: 1
+          max: 6
+    automation:
+      name: Automation to trigger
+      default:
+      selector:
+        entity:
+          domain: automation
+
+trigger:
+- platform: event
+  event_type: homematic.keypress
+  event_data:
+    name: !input 'button'
+    param: !input 'press_type'
+    channel: !input 'channel'
+
+action:
+  - service: automation.trigger
+    data: {}
+    entity_id: !input 'automation'
